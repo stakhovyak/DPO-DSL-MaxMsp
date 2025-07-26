@@ -1,5 +1,13 @@
 # DPO
 
+## Description
+
+This is a backend which performs DPO evolution algorithm, it has only one endpoint at `POST /evolve/` it calculates a hypergraph and returns a json with it.
+
+## Frontend?
+
+Frontend is an editor made to work with custom dsl for the graph creation, it will have a special functions which would work only in max msp `web` module, and output dicts specific for music creation. The dsl would have some special context-aware features, made for pre-exec caching and variables' temporary storage
+
 ## Stack to use
 
 ### Frontend
