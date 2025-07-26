@@ -1,5 +1,23 @@
 # DPO
 
+## Stack to use
+
+### Frontend
+
+- Typescript
+
+- Svelte
+
+- ANTLR4ts
+
+- Monaco Editor
+
+### Backend 
+
+- Python
+
+- FastAPI
+
 ## DSL proto
 
 ```cpp
@@ -35,4 +53,28 @@ $new_state = (A) <~ (A) -> (A) -> (x,y)(y,z) 5 // same as $start <~ @grow 5
 
 1. The generation of the states could be a pretty time consuming process, so you can't use it for sounds immediately as it declarated, so this language is more like a compiled one
 2. The moment the state comes into the composition should be synchronized with max msp global transport
-3. So there must be a bin folder with scripts such as ./bin/load_script ./composition1.dsl
+3. This python code can suit as backend api, frontend should have a dsl editor, that would send requests to the api when needed to calculate a graph. both api and frontend should have redis cache base
+
+## Name suggestions
+
+### 1. Syntagma
+
+### 2. Nomothetes
+
+### 3. Diakrisis
+
+## Frontend
+
+So, there is a canvas/editor, which can return the position, or store some context of hooks and listeners
+
+There is an instanse of the dsl compiler, that checks if you pressed enter (or just a new line of code appeared), it tries to read out the code and if it's correct execute it right away, the instance of anything that you registered in dsl, frontend stores along with it's declaration position in editor, when you erase the line, the instance deletes itself, but stays in cache (for a case if you just want to redeclare something or edit)
+
+## Caching
+
+let there be a function 
+
+```ts
+check_cache(func())
+// if found -> redis cache 
+// if not -> func()
+```
