@@ -18,7 +18,7 @@ Frontend is an editor made to work with custom dsl for the graph creation, it wi
 
 - ANTLR4ts
 
-- Monaco Editor
+- Ace or code mirror editor
 
 ### Backend 
 
