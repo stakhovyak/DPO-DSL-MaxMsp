@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from typing import List
 
 
-class Edge:
+class Edge(BaseModel):
     vertices: List[str]
 
 
-class DPORule:
+class DPORule(BaseModel):
     L: List[Edge]
     I: List[Edge]
     R: List[Edge]

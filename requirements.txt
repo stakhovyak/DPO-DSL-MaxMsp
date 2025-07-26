@@ -1,3 +1,4 @@
 hypernetx==1.2.5
 fastapi
 pydantic
+uvicorn

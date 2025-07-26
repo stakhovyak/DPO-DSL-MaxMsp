@@ -1,31 +1,51 @@
-from fastapi import FastAPI
-from src.api.models import EvolveResponse, EvolveRequest, Edge
-from src.dpo import apply_dpo_rule, DPORewritingRule, clean_hypergraph
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from typing import List
 import hypernetx as hnx
+import traceback, logging
+from src.api.models import EvolveRequest, EvolveResponse, Edge
+
+from src.dpo import apply_dpo_rule, DPORewritingRule, clean_hypergraph
 
 app = FastAPI()
+logger = logging.getLogger("uvicorn.error")
+
+
+def edge_list_to_dict(edges: List[Edge]) -> dict:
+    return {f"e{i}": edge.vertices for i, edge in enumerate(edges)}
 
 
 @app.post("/evolve", response_model=EvolveResponse)
 async def evolve(request: EvolveRequest):
-    L = hnx.Hypergraph(request.rule.L)
-    I = hnx.Hypergraph(request.rule.I)
-    R = hnx.Hypergraph(request.rule.R)
+    try:
+        L = hnx.Hypergraph(edge_list_to_dict(request.rule.L))
+        I = hnx.Hypergraph(edge_list_to_dict(request.rule.I))
+        R = hnx.Hypergraph(edge_list_to_dict(request.rule.R))
+        rule = DPORewritingRule(L, I, R)
 
-    rule = DPORewritingRule(L, I, R)
+        H = hnx.Hypergraph(edge_list_to_dict(request.hypergraph))
 
-    H = hnx.Hypergraph(request.hypergraph)
+        logger.info(f"steps: {request.steps}")
 
-    hypergraph_form = lambda H: clean_hypergraph(H) if request.clean else H
+        for step in range(request.steps):
+            ## TODO ! clean hypergraph doesn't work!!
+            current = clean_hypergraph(H) if request.clean == True else H
 
-    for _ in range(request.steps):
-        res = apply_dpo_rule(hypergraph_form(H), rule)
+            res = apply_dpo_rule(current, rule)
+            logger.info(step)
+            if not res:
+                break
+            _, H = res[0]
 
-        if not res:
-            break
+        out = [Edge(vertices=list(H.edges[e].elements)) for e in H.edges]
 
-        _, H = res[0]
+        return EvolveResponse(hypergraph=out)
 
-    return EvolveResponse(
-        graph=[Edge(vertices=list(H.edges[e])) for e in H.edges]
-    )
+    except Exception as exc:
+        tb = traceback.format_exc()
+        logger.error(f"Error in /evolve:\n{tb}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(exc), "trace": tb.splitlines()[-1]},
+        )

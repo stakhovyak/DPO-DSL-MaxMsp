@@ -148,7 +148,7 @@ def construct_pushout(D, rule, vertex_mapping):
     new_vertices = {}
     for v in R_vertices:
         if v not in rule.I.nodes:
-            new_vertices[v] = f"new_{uuid.uuid4().hex[:4]}"
+            new_vertices[v] = f"v_{uuid.uuid4().hex[:4]}"
 
     all_vertices = set(D.nodes) | set(new_vertices.values())
 
@@ -164,7 +164,7 @@ def construct_pushout(D, rule, vertex_mapping):
                 new_edge.add(vertex_map[v])
             else:
                 new_edge.add(new_vertices[v])
-        new_edges[f"new_{uuid.uuid4().hex[:4]}"] = new_edge
+        new_edges[f"e_{uuid.uuid4().hex[:4]}"] = new_edge
 
     return hnx.Hypergraph(new_edges)
 
