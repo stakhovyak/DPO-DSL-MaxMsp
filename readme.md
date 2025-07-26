@@ -14,9 +14,7 @@ Frontend is an editor made to work with custom dsl for the graph creation, it wi
 
 - Typescript
 
-- Svelte
-
-- ANTLR4ts
+- Peggy
 
 - Ace or code mirror editor
 
