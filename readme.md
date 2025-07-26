@@ -30,8 +30,8 @@ Frontend is an editor made to work with custom dsl for the graph creation, it wi
 
 ```cpp
 // creating modules (variables)
-// seed ≔ (A) >>> exp.add_module("seed", {"<uuid>":["A"]})
-// branch ≔ (x y)(x z) >>> exp.add_module("branch", {...})
+// seed = (A) >>> exp.add_module("seed", {"<uuid>":["A"]})
+// branch = (x y)(x z) >>> exp.add_module("branch", {...})
 seed = (A)
 branch = (x, y)(x, z)
 triple = (x, y, b)
